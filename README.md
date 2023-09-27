@@ -126,3 +126,9 @@ DB_DATABASE=homestead
 DB_USERNAME=homestead
 DB_PASSWORD=secret
 ```
+
+## Install MySQL Workbench
+- https://snapcraft.io/mysql-workbench-community
+- `sudo snap install mysql-workbench-community`
+- [How To Install MySQL Workbench on Ubuntu 22.04 LTS Linux](https://www.youtube.com/watch?v=ehceSuqBEOA)
+- `127.0.0.1 / user: homestead / password: secret`
