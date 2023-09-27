@@ -85,3 +85,44 @@ Want to build for production? Simply run `docker-compose run --rm npm run build`
 The current version of Laravel (9 as of today) uses MailHog as the default application for testing email sending and general SMTP work during local development. Using the provided Docker Hub image, getting an instance set up and ready is simple and straight-forward. The service is included in the `docker-compose.yml` file, and spins up alongside the webserver and database services.
 
 To see the dashboard and view any emails coming through the system, visit [localhost:8025](http://localhost:8025) after running `docker-compose up -d site`.
+
+
+## Issues
+
+```
+igor@igor:~/vhosts/e-learning(main)$ docker compose run --rm artisan migrate
+[+] Running 1/0
+ ⠿ Container e-learning-mysql-1  Running                                                                                                                                                                  0.0s
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000] [2002] Connection refused (Connection: mysql, SQL: select * from information_schema.tables where table_schema = homestead and table_name = migrations and table_type = 'BASE TABLE')
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:801
+    797▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    798▕                 );
+    799▕             }
+    800▕ 
+  ➜ 801▕             throw new QueryException(
+    802▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    803▕             );
+    804▕         }
+    805▕     }
+
+      +38 vendor frames 
+
+  39  artisan:35
+      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+
+```
+
+Solution:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+```
