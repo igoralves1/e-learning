@@ -1,66 +1,646 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Migrations Schema
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## Useful Commands
+From inside `/src(branchname)$`, (`$ cd /src`) run the following commands:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1 - Generate the key
+```
+docker compose run --rm artisan key:generate
+```
+2 - Install dependences with composer
+```
+docker compose run --rm composer install
+```
+3 - Update composer
+```
+docker compose run --rm composer update
+```
+4 - Run npm
+```
+docker compose run --rm npm run dev
+```
+5 - Run migrations
+```
+docker compose run --rm artisan migrate
+```
+6 - To SSH into the postgres container
+```
+docker exec -it <postgres container ID>  /bin/bash
+```
+7 - Rolling Back Migrations
+```
+docker compose run --rm artisan migrate:rollback
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+docker compose run --rm artisan migrate:rollback --step=1
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+8 - Get the Laravel Framework Version
+```
+docker compose run --rm artisan --version
+```
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## References
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+[Rolling Back Migrations](https://laravel.com/docs/10.x/migrations#rolling-back-migrations)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+[Column Modifiers](https://laravel.com/docs/10.x/migrations#column-modifiers)
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
+## Migrations and Schemas
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### 00 user
 
-## Contributing
+```
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+            
+$table->string('name')->nullable(false);
+$table->string('middle_name')->nullable();
+$table->string('last_name')->nullable();
+$table->string('email')->unique();
+$table->timestamp('email_verified_at')->nullable()->useCurrentOnUpdate();
+$table->boolean('is_active')->nullable(false)->default(1);
+$table->string('password')->nullable(false);
+$table->rememberToken();
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
 
-## Code of Conduct
+### 00 create_password_reset_tokens
+```
+$table->string('email')->primary();
+            
+$table->string('token');
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+$table->index(['email']);
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 00 failed_jobs
+```
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
 
-## License
+$table->string('uuid')->unique();
+$table->text('connection');
+$table->text('queue');
+$table->longText('payload');
+$table->longText('exception');
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 00 personal_access_tokens
+```
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->morphs('tokenable');
+$table->string('name');
+$table->string('token', 64)->unique();
+$table->text('abilities')->nullable();
+$table->timestamp('last_used_at')->nullable();
+$table->timestamp('expires_at')->nullable();
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+
+### 1 countries
+Only when using full Laravel:
+```
+php artisan make:migration create_countries_table  
+php artisan make:model App\\\Models\\\Country  
+php artisan make:controller -r CountryController 
+```
+ 
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_countries_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->char('name', 50)          ->nullable(false);
+$table->char('iso3_code', 3)->nullable();
+$table->char('iso2_code', 2)->nullable();
+$table->char('geocode', 50)->nullable();
+$table->decimal('lat', 10,8)->nullable();
+$table->decimal('long', 11,8)->nullable();
+
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 2 provinces
+Only when using full Laravel:
+```
+php artisan make:migration create_provinces_table  
+php artisan make:model App\\\Models\\\Province  
+php artisan make:controller -r ProvinceController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_provinces_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('country_id')  ->unsigned()->nullable(false);
+
+$table->char('name', 50)          ->nullable(false);
+$table->char('uf', 5)             ->nullable();
+$table->char('geocode', 50)       ->nullable();
+$table->decimal('lat', 10,8)      ->nullable();
+$table->decimal('long', 11,8)     ->nullable();
+
+$table->foreign('country_id')
+      ->references('id')
+      ->on('countries')
+      ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+
+### 3 cities
+Only when using full Laravel:
+``` 
+php artisan make:migration create_cities_table  
+php artisan make:model App\\\Models\\\City  
+php artisan make:controller -r CityController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_cities_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('province_id')  ->unsigned()->nullable(false);
+
+$table->char('name', 50)          ->nullable(false);
+$table->char('geocode', 50)       ->nullable();
+$table->decimal('lat', 10,8)      ->nullable();
+$table->decimal('long', 11,8)     ->nullable();
+
+$table->foreign('province_id')
+    ->references('id')
+    ->on('provinces')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+
+### 4 address_types
+Only when using full Laravel:
+```
+php artisan make:migration create_address_types_table  
+php artisan make:model App\\\Models\\\AddressType  
+php artisan make:controller -r AddressTypeController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_address_types_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->char('name', 50)      ->nullable(false);
+$table->text('description')   ->nullable();
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 5 addresses
+Only when using full Laravel:
+```
+php artisan make:migration create_addresses_table  
+php artisan make:model App\\\Models\\\Address  
+php artisan make:controller -r AddressController  
+```
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_addresses_table 
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('city_id')           ->unsigned()->nullable(false);
+$table->bigInteger('address_type_id')   ->unsigned()->nullable(false);
+
+$table->char('nb_civic', 50)      ->nullable();
+$table->char('nb_room', 50)       ->nullable();
+$table->char('nb_office', 50)     ->nullable();
+$table->char('name', 50)          ->nullable();
+$table->char('street', 100)       ->nullable();
+$table->char('zip', 20)           ->nullable();
+$table->char('complement', 200)   ->nullable();
+$table->text('description')             ->nullable();
+$table->decimal('lat', 10,8) ->nullable();
+$table->decimal('long', 11,8)->nullable();
+
+$table->foreign('city_id')
+    ->references('id')
+    ->on('cities')
+    ->onDelete('cascade');
+
+$table->foreign('address_type_id')
+    ->references('id')
+    ->on('address_types')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 6 
+Only when using full Laravel:
+```
+php artisan make:migration create_phones_table  
+php artisan make:model App\\\Models\\\Phone  
+php artisan make:controller -r PhoneController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_phones_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('address_id')->unsigned()->nullable(false);
+
+$table->char('number', 20)          ->nullable(false);
+$table->text('note')                      ->nullable();
+
+$table->foreign('address_id')
+    ->references('id')
+    ->on('addresses')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 7
+Only when using full Laravel:
+```
+php artisan make:migration create_faxes_table
+php artisan make:model App\\Models\\Fax
+php artisan make:controller -r FaxController
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_faxes_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('address_id')->unsigned()->nullable(false);
+
+$table->char('number', 20)->nullable(false);
+$table->text('note')->nullable();
+
+$table->foreign('address_id')
+    ->references('id')
+    ->on('addresses')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+
+### 8 
+Only when using full Laravel:
+```
+php artisan make:migration create_cell_phones_table  
+php artisan make:model App\\\Models\\\CellPhone  
+php artisan make:controller -r CellPhoneController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_cell_phones_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('address_id')->unsigned()->nullable(false);
+
+$table->char('number', 20)                ->nullable(false);
+$table->text('note')                      ->nullable();
+
+$table->foreign('address_id')
+    ->references('id')
+    ->on('addresses')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 9 
+- https://en.wikipedia.org/wiki/Language_localisation
+- https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+- https://www.andiamo.co.uk/resources/iso-language-codes/
+
+Only when using full Laravel:
+```
+php artisan make:migration create_languages_table  
+php artisan make:model App\\\Models\\\Language  
+php artisan make:controller -r LanguageController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_languages_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('country_id')       ->unsigned()->nullable(false);
+
+$table->char('family', 200)     ->nullable(false);
+$table->char('iso_name', 200)   ->nullable(false);
+$table->char('native_name', 200)->nullable(false);
+$table->char('iso_639_1', 10)   ->nullable();
+$table->char('iso_639_2T', 10)  ->nullable();
+$table->char('iso_639_2B', 10)  ->nullable();
+$table->char('iso_639_3', 10)   ->nullable();
+$table->char('tag', 10)         ->nullable();
+$table->text('note')                  ->nullable();
+
+$table->foreign('country_id')
+    ->references('id')
+    ->on('countries')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 10 
+Only when using full Laravel:
+```
+php artisan make:migration create_user_types_table  
+php artisan make:model App\\\Models\\\UserType  
+php artisan make:controller -r UserTypeController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_user_types_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('language_id') ->unsigned()->nullable(false);
+
+$table->char('type', 50)->nullable(false);
+$table->text('note')               ->nullable();
+
+$table->foreign('language_id')
+    ->references('id')
+    ->on('languages')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 11 
+Only when using full Laravel:
+```
+php artisan make:migration create_user_groups_table  
+php artisan make:model App\\\Models\\\UserGroup  
+php artisan make:controller -r UserGroupController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_user_groups_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->bigInteger('language_id') ->unsigned()->nullable(false);
+
+$table->char('group', 50)   ->nullable(false);
+$table->text('note')              ->nullable();
+
+$table->foreign('language_id')
+    ->references('id')
+    ->on('languages')
+    ->onDelete('cascade');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 12 - Pivot table - Only Migration
+Only when using full Laravel:
+```
+php artisan make:migration create_address_user_table  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_address_user_table
+
+$table->bigInteger('user_id')                ->unsigned()->nullable(false);
+$table->bigInteger('address_id')   ->unsigned()->nullable(false);
+            
+
+$table->foreign('user_id')
+    ->references('id')
+    ->on('users')
+    ->onDelete('cascade');
+    
+    
+$table->foreign('address_id', 'fk_adrrs_usr')
+    ->references('id')
+    ->on('addresses')
+    ->onDelete('cascade');    
+    
+$table->primary(['user_id', 'address_id']);
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+
+
+### 13 - Pivot table - Only Migration
+Only when using full Laravel:
+```
+php artisan make:migration create_country_user_table    
+php artisan make:model App\\\Models\\\CountryUser  
+php artisan make:controller -r CountryUserController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_country_user_table
+
+$table->bigInteger('user_id')->unsigned()->nullable(false);
+$table->bigInteger('country_id')->unsigned()->nullable(false);
+            
+
+$table->foreign('user_id')
+    ->references('id')
+    ->on('users')
+    ->onDelete('cascade');
+    
+    
+$table->foreign('country_id', 'fk_country_usr')
+    ->references('id')
+    ->on('countries')
+    ->onDelete('cascade');    
+    
+$table->primary(['user_id', 'country_id']);
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 14 - Pivot table - Only Migration
+Only when using full Laravel:
+```
+php artisan make:migration create_language_user_table  
+php artisan make:model App\\\Models\\\LanguageUser  
+php artisan make:controller -r LanguageUserController      
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_language_user_table
+
+$table->bigInteger('user_id')->unsigned()->nullable(false);
+$table->bigInteger('language_id')->unsigned()->nullable(false);
+
+
+$table->foreign('user_id')
+    ->references('id')
+    ->on('users')
+    ->onDelete('cascade');
+
+$table->foreign('language_id')
+    ->references('id')
+    ->on('languages')
+    ->onDelete('cascade');
+    
+$table->primary(['user_id', 'language_id']);
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 15 - Pivot table - Only Migration
+Only when using full Laravel:
+```
+php artisan make:migration create_user_group_user_table  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_user_group_user_table
+
+$table->bigInteger('user_id')->unsigned()->nullable(false);
+$table->bigInteger('user_group_id')->unsigned()->nullable(false);
+
+
+$table->foreign('user_id')
+    ->references('id')
+    ->on('users')
+    ->onDelete('cascade');
+
+$table->foreign('user_group_id','usr_grp_usr')
+    ->references('id')
+    ->on('user_groups')
+    ->onDelete('cascade');
+    
+$table->primary(['user_id', 'user_group_id']);
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+### 16 - Pivot table - Only Migration
+Only when using full Laravel:
+```
+php artisan make:migration create_user_type_user_table  
+php artisan make:model App\\\Models\\\UserTypeUser  
+php artisan make:controller -r UserTypeUserController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_user_type_user_table
+
+$table->bigInteger('user_id')->unsigned()->nullable(false);
+$table->bigInteger('user_type_id')->unsigned()->nullable(false);
+
+
+$table->foreign('user_id')
+    ->references('id')
+    ->on('users')
+    ->onDelete('cascade');
+
+$table->foreign('user_type_id','usr_type_usr')
+    ->references('id')
+    ->on('user_types')
+    ->onDelete('cascade');
+    
+$table->primary(['user_id', 'user_type_id']);
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
+
+
+
+
+
+
+
+
+

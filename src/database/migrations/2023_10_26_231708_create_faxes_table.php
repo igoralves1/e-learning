@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('faxes', function (Blueprint $table) {
             $table->bigIncrements('id')->autoIncrement();
-            
-            $table->string('name')->nullable(false);
-            $table->string('middle_name')->nullable();
-            $table->string('last_name')->nullable();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable()->useCurrentOnUpdate();
-            $table->boolean('is_active')->nullable(false)->default(1);
-            $table->string('password')->nullable(false);
-            $table->rememberToken();
-
             $table->index(['id']);
+            
+            $table->bigInteger('address_id')->unsigned()->nullable(false);
+            
+            $table->char('number', 20)->nullable(false);
+            $table->text('note')->nullable();
+            
+            $table->foreign('address_id')
+                ->references('id')
+                ->on('addresses')
+                ->onDelete('cascade');
+            
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
             $table->softDeletes()->nullable()->useCurrentOnUpdate();
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('faxes');
     }
 };
