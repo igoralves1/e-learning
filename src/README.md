@@ -637,9 +637,57 @@ $table->softDeletes()->nullable()->useCurrentOnUpdate();
 ```
 
 
+### 17
+Only when using full Laravel:
+```
+php artisan make:migration create_questions_table  
+php artisan make:model App\\\Models\\\Questions  
+php artisan make:controller -r QuestionsController  
+```
+
+When using Docker dbVersion-control:
+```
+docker compose run --rm artisan make:migration create_questions_table
+
+$table->bigIncrements('id')->autoIncrement();
+$table->index(['id']);
+
+$table->string('statement', 4000)->comment('The statement accepts 4000 bytes string long. It is around 581 words long.');
+
+$table->string('a', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('b', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('c', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('d', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('e', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('f', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('g', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('h', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('i', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+$table->string('j', 1500)->nullable()->comment('Each option accepts 1500 bytes string long. It is 223 words long.');
+
+$table->boolean('is_multiple')->nullable(false)->default(0)->comment('1 if is a multiple choice question or 0 if it is not');
+
+$table->timestamp('created_at')->useCurrent();
+$table->timestamp('updated_at')->useCurrent();
+$table->softDeletes()->nullable()->useCurrentOnUpdate();
+```
 
 
 
+Oi Gláucio, seguem os fatos:
+- Igor Lemos Alves
+- 92747400506
+- 05-01-1973
+- Último IR - trabalhei em 2007 declarei 2008
+- Trabalhei 2008, nao declarei 2009.
+- Sai do Brasil Jan de 2009.
+- Tenho declaração de IR do Canada de 2010 (trabalhado 2009) até 2018 (trabalhado em 2017)
+- Em 2018-2019 mudei para EUA mas continuei trabalhando no Canda. Comprei uma casa nos EUA. Nao tenho certeza mas acho que essa casa nao esta declarada nem no Cabadá (com certeza) e nem nos EUA. 
+- 2020 veio trabalho remoto nao declarei mais nada no Canada. Trablhei até 2022 numa empresa Canadense mas meu domincilio era nos EUA.
+- Em jul 2022 ganhei a permissao de trabalho dos EUA e comecei a trabalhar nos EUA (SET-Dez) declarei o IR dos EUA em FEv 2023.
+- Em final de 2022 ou dez 2023 minha esposa vendeu uma casa de $180.000. Pagou $15.000 para o corretor. Nao pegou documentação. Ficou com $165.000 na conta rendendo juros de CDI + ou - .85% ao mÊs.
+- Desde então eu mando dinheiro para o Brasil e temos cerca de 425.000 na conta. So esse ano foi uma injeção de mais de 250.000 na conta.
+- Esse dinehiro veio como porcentagem do meu salario liquido. Tiro uma parte e mando para o Brasil de vez em quando. Mando através de empresas como Western Union ou Remently, mas troquei muitos dolares para colegas que estavam precisando de dolares aqui nos EUA e eu pedi para depositar o valor em real na minha conta.
 
 
 
